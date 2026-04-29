@@ -1,4 +1,3 @@
-const { captureRejectionSymbol } = require("events");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
@@ -94,8 +93,11 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
+// Only listen in non-serverless environment (local development)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+  });
+}
 
 module.exports = app;
